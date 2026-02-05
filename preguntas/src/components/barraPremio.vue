@@ -1,0 +1,39 @@
+<template>
+    <table>
+        <tbody>
+            <tr>
+                <td>10PTS</td>
+            </tr>
+            <tr>
+                <td>25PTS</td>
+            </tr>
+            <tr>
+                <td>50PTS</td>
+            </tr>
+            <tr>
+                <td>100PTS</td>
+            </tr>
+            <tr>
+                <td>200PTS</td>
+            </tr>
+            <tr>
+                <td>500PTS</td>
+            </tr>
+            <tr>
+                <td>1000PTS</td>
+            </tr>
+            <tr>
+                <td>2000PTS</td>
+            </tr>
+            <tr>
+                <td>5000PTS</td>
+            </tr>
+            <tr>
+                <td>10000PTS</td>
+            </tr>
+        </tbody>
+    </table>
+</template>
+
+<script setup>
+</script>
