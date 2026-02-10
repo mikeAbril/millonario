@@ -9,7 +9,7 @@ const routes = [
     {path:"/final", component:final}
 ]
 
-export const router = createRouter({
+export default createRouter({
     history: createWebHashHistory(),
     routes
 })

@@ -1,6 +1,9 @@
 import { createApp } from 'vue'
-import { Quasar } from 'quasar'
-import {router} from "./routes/routes.js"
+import { Quasar, Dialog } from 'quasar'  // ⭐ Importar Dialog
+import { createPinia } from 'pinia'
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+
+import router from './routes/routes.js'
 
 // Import icon libraries
 import '@quasar/extras/material-icons/material-icons.css'
@@ -13,17 +16,22 @@ import '@quasar/extras/material-symbols-sharp/material-symbols-sharp.css'
 
 // Import Quasar css
 import 'quasar/src/css/index.sass'
-
 import './style.css'
+
 import App from './App.vue'
 
-const myApp = createApp(App)
+const app = createApp(App)
+const pinia = createPinia()
 
-myApp.use(router)
+pinia.use(piniaPluginPersistedstate)
 
-myApp.use(Quasar, {
-  plugins: {}, // import Quasar plugins and add here
+app.use(pinia)
+app.use(router)
+
+app.use(Quasar, {
+  plugins: {
+    Dialog  //  Dialogo del amigo en elcomodinq puse  
+  }
 })
 
-// Assumes you have a <div id="app"></div> in your index.html
-myApp.mount('#app')
+app.mount('#app')
