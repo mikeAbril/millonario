@@ -2,19 +2,38 @@
   <div class="barra-puntaje" :class="{ 'abierta': isOpen }">
     <!-- Botón de toggle -->
     <button class="toggle-btn" @click="toggleBarra">
+      <!-- Icono de hamburguesa cuando está cerrada -->
       <svg 
-        class="flecha" 
-        :class="{ 'rotada': isOpen }" 
+        v-if="!isOpen"
+        class="hamburguesa" 
         width="24" 
         height="24" 
         viewBox="0 0 24 24" 
         fill="none" 
         stroke="currentColor" 
         stroke-width="2"
+        stroke-linecap="round"
       >
-        <polyline points="15 18 9 12 15 6"></polyline>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
       </svg>
-      <span class="texto-toggle">PUNTAJE</span>
+      
+      <!-- Flecha y texto cuando está abierta -->
+      <template v-else>
+        <svg 
+          class="flecha rotada" 
+          width="24" 
+          height="24" 
+          viewBox="0 0 24 24" 
+          fill="none" 
+          stroke="currentColor" 
+          stroke-width="2"
+        >
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        <span class="texto-toggle">PUNTAJE</span>
+      </template>
     </button>
 
     <!-- Contenido de la barra -->
@@ -23,20 +42,20 @@
       
       <div class="lista-niveles">
         <div 
-          v-for="(pregunta, index) in preguntasReversa" 
+          v-for="(pregunta, index) in preguntas" 
           :key="index"
           class="nivel-item"
           :class="{
-            'actual': index === (preguntas.length - 1 - preguntaActual),
-            'completado': index > (preguntas.length - 1 - preguntaActual)
+            'actual': index === preguntaActual,
+            'completado': index < preguntaActual
           }"
         >
-          <div class="numero-nivel">{{ preguntas.length - index }}</div>
+          <div class="numero-nivel">{{ index + 1 }}</div>
           <div class="info-nivel">
             <div class="nivel-texto">Nivel {{ pregunta.nivel }}</div>
-            <div class="premio">{{ getPremio(preguntas.length - index) }}</div>
+            <div class="premio">{{ getPremio(index + 1) }}</div>
           </div>
-          <div v-if="index === (preguntas.length - 1 - preguntaActual)" class="indicador-actual">
+          <div v-if="index === preguntaActual" class="indicador-actual">
             ▶
           </div>
         </div>
@@ -46,7 +65,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { preguntas } from '../data/preguntas.js'
 
 const props = defineProps({
@@ -57,11 +76,6 @@ const props = defineProps({
 })
 
 const isOpen = ref(false)
-
-// Invertir el orden de las preguntas para mostrar del 20 al 1
-const preguntasReversa = computed(() => {
-  return [...preguntas].reverse()
-})
 
 function toggleBarra() {
   isOpen.value = !isOpen.value
@@ -142,6 +156,21 @@ function getPremio(numeroPregunta) {
   box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
 }
 
+.hamburguesa {
+  color: #FFD700;
+  filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.5));
+  animation: pulso-suave 2s ease-in-out infinite;
+}
+
+@keyframes pulso-suave {
+  0%, 100% {
+    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.8));
+  }
+}
+
 .flecha {
   transition: transform 0.3s ease;
   min-width: 24px;
@@ -154,13 +183,7 @@ function getPremio(numeroPregunta) {
 
 .texto-toggle {
   white-space: nowrap;
-  opacity: 0;
-  transition: opacity 0.3s ease;
   text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-}
-
-.barra-puntaje.abierta .texto-toggle {
-  opacity: 1;
 }
 
 .contenido-puntaje {
@@ -176,7 +199,7 @@ function getPremio(numeroPregunta) {
   opacity: 1;
 }
 
-/* Scrollbar personalizado */
+/* Scrollbar  */
 .contenido-puntaje::-webkit-scrollbar {
   width: 6px;
 }

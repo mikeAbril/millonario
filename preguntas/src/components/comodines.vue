@@ -32,7 +32,7 @@
 </template>
 
 <script setup>
-import { useJuegoStore } from '../stores/juegoStore'
+import { useJuegoStore } from '../stores/juegostore'
 
 const juegoStore = useJuegoStore()
 </script>

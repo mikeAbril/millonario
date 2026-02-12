@@ -22,11 +22,13 @@
 
       <barraPremio :preguntaActual="juegoStore.numeroPregunta" />
 
-      <comodines />
+      <!-- Contenedor centrado para comodines y pregunta -->
+      <div class="seccion-principal">
+        <comodines />
+        <Pregunta :texto="juegoStore.preguntaActual.texto" />
+      </div>
 
-      <Pregunta :texto="juegoStore.preguntaActual.texto" />
-
-      <ListaRespuestas
+      <Respuestas
         :opciones="juegoStore.opcionesVisibles"
         @respuesta="validarRespuesta"
       />
@@ -35,11 +37,11 @@
 </template>
 
 <script setup>
-import Pregunta from '../components/Pregunta.vue'
-import ListaRespuestas from '../components/ListaRespuestas.vue'
-import comodines from '../components/Comodines.vue'
-import barraPremio from '../components/BarraPremio.vue'
-import { useJuegoStore } from '../stores/juegoStore'
+import Pregunta from '../components/pregunta.vue'
+import Respuestas from '../components/listaRespuestas.vue'
+import comodines from '../components/comodines.vue'
+import barraPremio from '../components/barraPremio.vue'
+import { useJuegoStore } from '../stores/juegostore'
 
 const juegoStore = useJuegoStore()
 
@@ -47,7 +49,8 @@ function validarRespuesta(correcta) {
   if (correcta === true) {
     juegoStore.siguientePregunta()
   } else {
-    console.log("respuesta Incorrecta")
+    // Perder el juego
+    juegoStore.perderJuego()
   }
 }
 </script>
@@ -61,13 +64,15 @@ function validarRespuesta(correcta) {
   
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   
   overflow-x: hidden;
+  overflow-y: auto;
   margin: 0;
-  padding: 20px;
+  padding: 15px 20px 40px;
   position: relative;
+  box-sizing: border-box;
 }
 
 /* Efecto de nebulosa */
@@ -250,29 +255,185 @@ function validarRespuesta(correcta) {
   position: relative;
   z-index: 10;
   width: 100%;
+  max-width: 1400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Sección principal - Comodines y Pregunta centrados */
+.seccion-principal {
+  width: 100%;
   max-width: 1200px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 10px;
+  flex-shrink: 0;
 }
 
 /* Estilos del video */
 .video-container {
   width: 100%;
-  max-width: 600px;
-  border-radius: 20px;
+  max-width: 400px;
+  border-radius: 15px;
   overflow: hidden;
   box-shadow: 
     0 0 20px rgba(255, 215, 0, 0.3),
     0 0 40px rgba(255, 215, 0, 0.2);
-  margin-bottom: 20px;
+  margin-bottom: 5px;
+  flex-shrink: 0;
 }
 
 .video-presentador {
   width: 100%;
   height: auto;
   display: block;
-  border-radius: 20px;
+  border-radius: 15px;
+}
+
+/* ========== RESPONSIVIDAD ========== */
+
+
+@media (max-width: 1200px) {
+  .contenido-juego {
+    max-width: 100%;
+    gap: 10px;
+  }
+  
+  .seccion-principal {
+    max-width: 100%;
+    gap: 10px;
+  }
+}
+
+
+@media (max-width: 1024px) {
+  .fondo {
+    padding: 12px 15px 35px;
+  }
+  
+  .contenido-juego {
+    gap: 8px;
+  }
+  
+  .seccion-principal {
+    gap: 8px;
+    padding: 0 8px;
+  }
+  
+  .video-container {
+    max-width: 380px;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .fondo {
+    padding: 10px 10px 30px;
+  }
+  
+  .contenido-juego {
+    gap: 8px;
+  }
+  
+  .seccion-principal {
+    gap: 8px;
+    padding: 0 5px;
+  }
+  
+  .video-container {
+    max-width: 350px;
+  }
+}
+
+
+@media (max-width: 640px) {
+  .fondo {
+    padding: 8px 8px 30px;
+  }
+  
+  .contenido-juego {
+    gap: 6px;
+  }
+  
+  .seccion-principal {
+    gap: 6px;
+    padding: 0;
+    width: 98%;
+  }
+  
+  .video-container {
+    max-width: 320px;
+  }
+}
+
+
+@media (max-width: 480px) {
+  .fondo {
+    padding: 8px 5px 30px;
+  }
+  
+  .contenido-juego {
+    gap: 5px;
+  }
+  
+  .seccion-principal {
+    gap: 5px;
+    width: 100%;
+  }
+  
+  .video-container {
+    max-width: 280px;
+  }
+}
+
+
+@media (max-width: 375px) {
+  .fondo {
+    padding: 5px 3px 30px;
+  }
+  
+  .contenido-juego {
+    gap: 4px;
+  }
+  
+  .seccion-principal {
+    gap: 4px;
+  }
+  
+  .video-container {
+    max-width: 250px;
+  }
+}
+
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .fondo {
+    padding: 10px;
+  }
+  
+  .contenido-juego {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .video-container {
+    max-width: 300px;
+    margin-bottom: 0;
+  }
+  
+  .seccion-principal {
+    flex: 1;
+    min-width: 300px;
+    gap: 10px;
+  }
 }
 </style>

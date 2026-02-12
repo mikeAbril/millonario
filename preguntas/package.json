@@ -8,6 +8,10 @@
     "build": "vite build",
     "preview": "vite preview"
   },
+
+
+
+
   "dependencies": {
     "@quasar/extras": "^1.17.0",
     "pinia": "^3.0.4",

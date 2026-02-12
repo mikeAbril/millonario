@@ -109,14 +109,14 @@ button:focus-visible {
 /* COLOR DEL MENSAJE/CONTENIDO */
 .dialog-audiencia .q-card__section--vert,
 .dialog-amigo .q-card__section--vert {
-  color: #000000 !important;  /* Cambia este color */
+  color: #000000 !important; 
   font-size: 1.1em;
 }
 
-/* ⭐ COLOR DE LOS NÚMEROS/LETRAS EN NEGRITA */
+/* COLOR DE LOS NÚMEROS/LETRAS EN NEGRITA */
 .dialog-audiencia strong,
 .dialog-amigo strong {
-  color: #FFA500 !important;  /* Naranja brillante */
+  color: #FFA500 !important;  /* */
   font-size: 1.3em;
   text-shadow: 0 0 10px rgba(255, 165, 0, 0.6);
 }

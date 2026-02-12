@@ -27,12 +27,16 @@
 
       <!-- Punto indicador -->
       <div class="punto-indicador"></div>
+      
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const props = defineProps({
   opciones: {
@@ -45,9 +49,57 @@ const emit = defineEmits(['respuesta'])
 
 const opcionSeleccionada = ref(null)
 const confirmada = ref(false)
+let audioSeguro = null
+let audioAsustado = null
+let temporizadorAsustado = null
 
 function getLetra(index) {
   return ['A', 'B', 'C', 'D'][index]
+}
+
+function reproducirSeguroYAsustado() {
+  // Si ya se reprodujo, no hacer nadaaaa
+  if (audioSeguro) return
+  
+  // Reproducir SEGURO.mp3 primero
+  audioSeguro = new Audio(
+    new URL('../assets/SEGURO.mp3', import.meta.url).href
+  )
+  audioSeguro.play().catch(err => {
+    console.log('Error al reproducir SEGURO.mp3:', err)
+  })
+  
+  // Programar ASUSTADO.mp3 10 segundos
+  temporizadorAsustado = setTimeout(() => {
+    // Solo reproducir si todavía no se ha confirmado la respuesta
+    if (!confirmada.value) {
+      audioAsustado = new Audio(
+        new URL('../assets/ASUSTADO.mp3', import.meta.url).href
+      )
+      audioAsustado.play().catch(err => {
+        console.log('Error al reproducir ASUSTADO.mp3:', err)
+      })
+    }
+  }, 10000) // 10 segundos 
+}
+
+function limpiarAudios() {
+  // Limpiar temporizador si existe
+  if (temporizadorAsustado) {
+    clearTimeout(temporizadorAsustado)
+    temporizadorAsustado = null
+  }
+  
+  // Detener audios si están reproduciéndose
+  if (audioSeguro) {
+    audioSeguro.pause()
+    audioSeguro = null
+  }
+  
+  if (audioAsustado) {
+    audioAsustado.pause()
+    audioAsustado = null
+  }
 }
 
 function manejarClick(index, esCorrecta) {
@@ -57,12 +109,20 @@ function manejarClick(index, esCorrecta) {
   // Primer click: Seleccionar (naranja)
   if (opcionSeleccionada.value === null) {
     opcionSeleccionada.value = index
+    reproducirSeguroYAsustado()
     return
   }
   
+  if (!esCorrecta) {
+    setTimeout(()=>{
+      router.push('/final')
+    }, 2000)
+  }
+
   // Si clickea la misma opción por segunda vez: Confirmar
   if (opcionSeleccionada.value === index) {
     confirmada.value = true
+    limpiarAudios() // Detener temporizador y audios al confirmar
     
     // Esperar 2 segundos antes de pasar a la siguiente pregunta
     setTimeout(() => {
@@ -210,7 +270,7 @@ function manejarClick(index, esCorrecta) {
   }
 }
 
-/* Estado: Correcta (Verde) - Segundo Click */
+/* Estado: rtaCorrecta (Verde) - Segundo Click */
 .opcion-respuesta.correcta .hexagono-borde {
   background: linear-gradient(135deg, 
     rgba(34, 197, 94, 0.9) 0%, 
@@ -240,7 +300,7 @@ function manejarClick(index, esCorrecta) {
   }
 }
 
-/* Estado: Incorrecta (Roja) - Segundo Click */
+/* Estado: RTA Incorrecta (Roja) - Segundo Click */
 .opcion-respuesta.incorrecta .hexagono-borde {
   background: linear-gradient(135deg, 
     rgba(239, 68, 68, 0.9) 0%, 
@@ -270,7 +330,7 @@ function manejarClick(index, esCorrecta) {
   }
 }
 
-/* Responsive */
+/* Responsividaad */
 @media (max-width: 768px) {
   .contenedor-respuestas {
     grid-template-columns: 1fr;
