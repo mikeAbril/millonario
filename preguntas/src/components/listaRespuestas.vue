@@ -59,6 +59,8 @@ function manejarClick(index, esCorrecta) {
     opcionSeleccionada.value = index
     return
   }
+
+  
   
   // Si clickea la misma opción por segunda vez: Confirmar
   if (opcionSeleccionada.value === index) {
